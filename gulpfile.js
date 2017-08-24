@@ -11,6 +11,8 @@ const handlebars = require('gulp-compile-handlebars');
 const htmlBeautify = require('gulp-html-beautify');
 const sass = require('gulp-sass');
 const babel = require('gulp-babel');
+// if using webpack modules
+const webpack = require('webpack-stream');
 
 gulp.task('clean', function() {
     del(['./dist/*']);
@@ -45,15 +47,24 @@ gulp.task('html', function() {
         .pipe(gulp.dest('./dist'));
 });
 
+// gulp.task('js', function() {
+//     // Run js through babel and export to dist
+//     gulp.src('src/js/*.js')
+//         .pipe(babel({
+//             presets: ['env']
+//         }))
+//         .pipe(gulp.dest('./dist/scripts'));
+//     // Copy any static scripts over to dist
+//     gulp.src('./src/js/static/*.js')
+//         .pipe(gulp.dest('./dist/scripts'));
+// });
+
+// if using webpack and modules
 gulp.task('js', function() {
     // Run js through babel and export to dist
-    gulp.src('src/js/*.js')
-        .pipe(babel({
-            presets: ['env']
-        }))
-        .pipe(gulp.dest('./dist/scripts'));
-    // Copy any static scripts over to dist
-    gulp.src('./src/js/static/*.js')
+    return gulp.src('src/js/script.js')
+        .pipe(webpack())
+        .pipe(rename('script.js'))
         .pipe(gulp.dest('./dist/scripts'));
 });
 
