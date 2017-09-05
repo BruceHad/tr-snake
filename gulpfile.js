@@ -3,19 +3,25 @@
 const del = require('del');
 const gulp = require('gulp');
 const rename = require('gulp-rename');
-const run = require('run-sequence');
+const runSequence = require('run-sequence');
+const run = require('gulp-run');
 const path = require('path');
 const fs = require('fs');
 const data = require('gulp-data');
 const handlebars = require('gulp-compile-handlebars');
 const htmlBeautify = require('gulp-html-beautify');
 const sass = require('gulp-sass');
-const babel = require('gulp-babel');
+// const babel = require('gulp-babel');
 // if using webpack modules
 const webpack = require('webpack-stream');
 
 gulp.task('clean', function() {
     del(['./dist/*']);
+});
+
+gulp.task('test', function(){
+    return gulp.src('tests/*spec.js')
+        .pipe(run('npm run test'));
 });
 
 gulp.task('html', function() {
@@ -63,7 +69,20 @@ gulp.task('html', function() {
 gulp.task('js', function() {
     // Run js through babel and export to dist
     return gulp.src('src/js/script.js')
-        .pipe(webpack())
+        .pipe(webpack({
+            module: {
+                rules: [{
+                    test: /\.js$/,
+                    exclude: /(node_modules|bower_components)/,
+                    use: {
+                        loader: 'babel-loader',
+                        options: {
+                            presets: ['env']
+                        }
+                    }
+                }]
+            }
+        }))
         .pipe(rename('script.js'))
         .pipe(gulp.dest('./dist/scripts'));
 });
@@ -84,9 +103,9 @@ gulp.task('images', function() {
 });
 
 gulp.task('default', ['clean'], function() {
-    run('html', 'js', 'css', 'images');
+    runSequence('html', 'js', 'css', 'images', 'test');
     gulp.watch('./src/css/*.scss', ['css']);
-    gulp.watch('./src/js/*.js', ['js']);
+    gulp.watch('./src/js/*.js', ['js', 'test']);
     gulp.watch('./src/templates/**/*.hbs', ['html']);
     gulp.watch('./src/data/*.json', ['html']);
 });
