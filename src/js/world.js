@@ -37,12 +37,13 @@ function Grid(width, height, squareSize) {
       let square = new Square(
         Math.floor(Math.random() * this.width),
         Math.floor(Math.random() * this.height));
-      if (!isOutside(square)) { found = true; }
+      if (!this.isOutside(square) && !
+        snake.collides(this.isOutside, square)) { found = true; }
       pill = new Pill(square);
     }
   };
 
-  let isOutside = (square) => {
+  this.isOutside = (square) => {
     return square.x < 0 || square.x >= width || square.y < 0 || square.y >= height;
   };
 
@@ -61,7 +62,7 @@ function Grid(width, height, squareSize) {
     let gameOver = false;
     snake.update();
     let square = snake.getPosition();
-    if (snake.collides(isOutside)) {
+    if (snake.collides(this.isOutside, square)) {
       gameOver = true;
     }
     else if (hitsPill(square)) {
@@ -184,9 +185,9 @@ function Snake() {
     return leader.getSquare();
   };
 
-  this.collides = (isOutside) => {
+  this.collides = (isOutside, square) => {
     let gameOver = false;
-    let leaderSquare = leader.getSquare();
+    let leaderSquare = square;
     if (isOutside(leaderSquare)) {
       gameOver = true;
     }

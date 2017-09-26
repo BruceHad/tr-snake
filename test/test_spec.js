@@ -36,10 +36,10 @@ describe('Grid', function() {
   describe('isOutside()', function() {
     it('is true if the square outside of the grid', function() {
       let grid = new Grid(3, 3, 5);
-  //     assert(!grid.isOutside(new Square(0, 0)));
-  //     assert(!grid.isOutside(new Square(2, 2)));
-  //     assert(grid.isOutside(new Square(0, 3)));
-  //     assert(grid.isOutside(new Square(3, 0)));
+      assert(!grid.isOutside(new Square(0, 0)));
+      assert(!grid.isOutside(new Square(2, 2)));
+      assert(grid.isOutside(new Square(0, 3)));
+      assert(grid.isOutside(new Square(3, 0)));
     });
   });
 });
