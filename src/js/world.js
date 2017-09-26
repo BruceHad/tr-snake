@@ -52,6 +52,10 @@ function Grid(width, height, squareSize) {
     }
     return false;
   };
+  
+  this.getSnake = () => {
+    return snake;
+  };
 
   this.update = () => {
     let gameOver = false;
@@ -79,13 +83,13 @@ function Pill(square) {
   this.square = square;
   this.draw = (ctx, squareSize) => {
     // calculate centre of grid point
-    ctx.strokeStyle = '#eee';
+    ctx.fillStyle = '#e5dde2';
     let radius = squareSize / 2;
     let x = this.square.x * squareSize + radius;
     let y = this.square.y * squareSize + radius;
     ctx.beginPath();
     ctx.arc(x, y, radius, 0, Math.PI * 2, true);
-    ctx.stroke();
+    ctx.fill();
   };
 }
 
@@ -98,23 +102,23 @@ function Segment(sqr, prnt) {
   if (typeof parent != 'undefined') {
     nextSquare = parent.getSquare();
   }
-  
+
   this.changeType = (typ) => {
     type = typ;
   };
-  
+
   this.getType = () => {
     return type;
   };
-  
+
   this.isHittable = () => {
     return type === 'leader' || type === 'tail';
   };
-  
+
   this.getSquare = () => {
     return square;
   };
-  
+
   this.move = () => {
     if (typeof parent != 'undefined') {
       // Will move Segment to nextSquare
@@ -158,7 +162,7 @@ function Snake() {
     else return true;
   };
 
-  let changeDirection = (dir) => {
+  this.changeDirection = (dir) => {
     if (checkChangeDir(dir)) {
       leader.direction = dir;
     }
@@ -175,21 +179,21 @@ function Snake() {
       }
     }
   };
-  
+
   this.getPosition = () => {
     return leader.getSquare();
   };
-  
+
   this.collides = (isOutside) => {
     let gameOver = false;
     let leaderSquare = leader.getSquare();
-    if(isOutside(leaderSquare)){
+    if (isOutside(leaderSquare)) {
       gameOver = true;
     }
-    
+
     for (var i = 1; i < segments.length; i++) {
-      if(leaderSquare.matches(segments[i].getSquare()) 
-          && segments[i].isHittable()) {
+      if (leaderSquare.matches(segments[i].getSquare()) &&
+        segments[i].isHittable()) {
         gameOver = true;
         break;
       }
@@ -212,17 +216,6 @@ function Snake() {
       }
     }
   };
-
-  document.addEventListener('keydown', (event) => {
-    let k = event.key;
-    if ('wsad'.indexOf(k) != -1) {
-      // Change direction
-      if (k === 'w') changeDirection('n');
-      else if (k === 's') changeDirection('s');
-      else if (k === 'a') changeDirection('w');
-      else if (k === 'd') changeDirection('e');
-    }
-  });
 }
 
 function Message() {
@@ -240,8 +233,10 @@ function Message() {
 
 export function World(width, height, squareSize) {
   let grid = new Grid(width, height, squareSize);
+  let snake = grid.getSnake();
   let canvasElem = document.getElementById('canvas');
   let ctx = canvasElem.getContext('2d');
+  let gameIsOver = false;
   canvasElem.height = height * squareSize;
   canvasElem.width = width * squareSize;
   let intId, message;
@@ -256,15 +251,10 @@ export function World(width, height, squareSize) {
     clearInterval(intId);
     message.setText('Game Over! Press enter to restart.');
     message.draw(ctx);
-    document.addEventListener('keydown', (event) => {
-      if (event.keyCode === 13) {
-        this.init();
-      }
-    });
   };
 
   let turn = () => {
-    let gameIsOver = grid.update();
+    gameIsOver = grid.update();
     ctx.clearRect(0, 0, width * squareSize, height * squareSize);
     if (!gameIsOver) {
       grid.draw(ctx);
@@ -280,12 +270,28 @@ export function World(width, height, squareSize) {
     message = new Message(grid, squareSize);
     message.setText('Snake! Press W, A, S or D to begin.');
     message.draw(ctx);
+  };
 
-    document.addEventListener('keydown', (event) => {
-      let k = event.key;
-      if ('wsad'.indexOf(k) != -1 && typeof intId === 'undefined') {
+  /* Event listeners */
+  /* Snake */
+  document.addEventListener('keydown', (event) => {
+    let k = event.key;
+    if ('wsad'.indexOf(k) != -1) {
+      // Change direction
+      if (k === 'w') snake.changeDirection('n');
+      else if (k === 's') snake.changeDirection('s');
+      else if (k === 'a') snake.changeDirection('w');
+      else if (k === 'd') snake.changeDirection('e');
+
+      if (typeof intId === 'undefined') {
         start();
       }
-    });
-  };
+    }
+  });
+  /* Restart */
+  document.addEventListener('keydown', (event) => {
+    if (event.keyCode === 13 && gameIsOver) {
+      this.init();
+    }
+  });
 }
