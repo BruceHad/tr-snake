@@ -227,20 +227,19 @@ function Message() {
   };
 
   this.draw = (ctx) => {
-    ctx.font = '10px sans-serif';
-    ctx.fillText(text, 20, 100);
+    ctx.fillStyle = '#666';
+    ctx.strokeStyle = '#666';
+    ctx.font = '8px sans-serif';
+    ctx.fillText(text, 15, 80);
   };
 }
 
 export function World(width, height, squareSize) {
-  let grid = new Grid(width, height, squareSize);
-  let snake = grid.getSnake();
+  let grid, snake, gameIsOver, intId, message;
   let canvasElem = document.getElementById('canvas');
   let ctx = canvasElem.getContext('2d');
-  let gameIsOver = false;
   canvasElem.height = height * squareSize;
   canvasElem.width = width * squareSize;
-  let intId, message;
 
   let start = () => {
     if (typeof this.intId === 'undefined') {
@@ -249,7 +248,9 @@ export function World(width, height, squareSize) {
   };
 
   let endGame = () => {
+    console.log('Game Over!');
     clearInterval(intId);
+    intId = (function () { return; })(); // reset to undefined
     message.setText('Game Over! Press enter to restart.');
     message.draw(ctx);
   };
@@ -266,11 +267,14 @@ export function World(width, height, squareSize) {
   };
 
   this.init = () => {
+    grid = new Grid(width, height, squareSize);
+    snake = grid.getSnake();
+    gameIsOver = false;
     ctx.clearRect(0, 0, width * squareSize, height * squareSize);
-    grid.draw(ctx);
     message = new Message(grid, squareSize);
     message.setText('Snake! Press W, A, S or D to begin.');
     message.draw(ctx);
+    grid.draw(ctx);
   };
 
   /* Event listeners */
@@ -278,6 +282,7 @@ export function World(width, height, squareSize) {
   document.addEventListener('keydown', (event) => {
     let k = event.key;
     if ('wsad'.indexOf(k) != -1) {
+      console.log("key pressed", intId);
       // Change direction
       if (k === 'w') snake.changeDirection('n');
       else if (k === 's') snake.changeDirection('s');
@@ -285,6 +290,7 @@ export function World(width, height, squareSize) {
       else if (k === 'd') snake.changeDirection('e');
 
       if (typeof intId === 'undefined') {
+        console.log("Let's get going!");
         start();
       }
     }
