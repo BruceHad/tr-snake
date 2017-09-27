@@ -1,4 +1,4 @@
 {
-    "title1": "Snake",
-    "subtitle1": "A javascript implementation of the old 'snake' video game."
+    "title": "Tiny, Wee Snake",
+    "subtitle": "A javascript 'snake' game."
 }

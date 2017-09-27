@@ -3,7 +3,7 @@ To Do
 
 1. [ ] Make size variable.
 2. [ ] Improve tests.
-3. [ ] Improve interface/game over screens (fix restart).
+3. [x] Improve interface/game over screens (fix restart).
 4. [ ] Add in score/high score.
 5. [ ] Design container page.
 6. [x] Move event listeners outside objects.

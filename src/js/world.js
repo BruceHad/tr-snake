@@ -84,7 +84,7 @@ function Pill(square) {
   this.square = square;
   this.draw = (ctx, squareSize) => {
     // calculate centre of grid point
-    ctx.fillStyle = '#e5dde2';
+    ctx.fillStyle = '#c5dde2';
     let radius = squareSize / 2;
     let x = this.square.x * squareSize + radius;
     let y = this.square.y * squareSize + radius;
@@ -134,7 +134,7 @@ function Segment(sqr, prnt) {
 
   this.draw = (ctx, squareSize) => {
     // calculate centre of grid point
-    ctx.fillStyle = '#eee';
+    ctx.fillStyle = '#aaa';
     ctx.strokeStyle = '#eee';
     let radius = squareSize / 2;
     let x = square.x * squareSize + radius;
@@ -144,14 +144,11 @@ function Segment(sqr, prnt) {
     if (type === 'leader' || type === 'tail') {
       ctx.fill();
     }
-    else if (type === 'blank') {
-      ctx.stroke();
-    }
   };
 }
 
 function Snake() {
-  let initSquare = new Square(10, 10);
+  let initSquare = new Square(14, 14);
   let leader = new Segment(initSquare);
   leader.changeType('leader');
   let opposite = { 'n': 's', 's': 'n', 'e': 'w', 'w': 'e' };
@@ -171,7 +168,7 @@ function Snake() {
 
   this.grow = () => {
     console.log('it grows!');
-    let count = 2;
+    let count = 4;
     for (var i in segments) {
       if (segments[i].getType() === 'blank') {
         segments[i].changeType('tail');
@@ -229,8 +226,8 @@ function Message() {
   this.draw = (ctx) => {
     ctx.fillStyle = '#666';
     ctx.strokeStyle = '#666';
-    ctx.font = '8px sans-serif';
-    ctx.fillText(text, 15, 80);
+    ctx.font = '9px sans-serif';
+    ctx.fillText(text, 30, 80);
   };
 }
 
@@ -243,7 +240,7 @@ export function World(width, height, squareSize) {
 
   let start = () => {
     if (typeof this.intId === 'undefined') {
-      intId = window.setInterval(turn, 250);
+      intId = window.setInterval(turn, 150);
     }
   };
 
@@ -282,7 +279,6 @@ export function World(width, height, squareSize) {
   document.addEventListener('keydown', (event) => {
     let k = event.key;
     if ('wsad'.indexOf(k) != -1) {
-      console.log("key pressed", intId);
       // Change direction
       if (k === 'w') snake.changeDirection('n');
       else if (k === 's') snake.changeDirection('s');

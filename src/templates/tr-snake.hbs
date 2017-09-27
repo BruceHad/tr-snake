@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <meta content="IE=edge" http-equiv="X-UA-Compatible">
+    <meta content="width=device-width,initial-scale=1" name="viewport">
+    <meta content="" name="description">
+    <title>{{ title }}</title>
+    <link href="css/style.css" rel="stylesheet">
+    <link href="css/tr-snake.css" rel="stylesheet">
+    <link href="images/favicon.png" rel="icon">
+</head>
+
+<body>
+
+    {{> header}}
+    
+    <div class='container'>
+        <div class='row'>
+            <div class='col col-md-6'>
+                <canvas id='canvas' height='210' width = '210'></canvas>
+            </div>
+            <div class='col col-md-6'>
+                <p>This is just a straight implementation of the old <a href='https://en.wikipedia.org/wiki/Snake_(video_game)'>Snake</a> video game.</p>
+                <p>Controls:</p>
+                <ul>
+                    <li>W - Up</li>
+                    <li>A - Left</li>
+                    <li>D - Right</li>
+                    <li>S - Down</li>
+                </ul>
+            </div>
+        </div>
+    </div>
+    
+    {{> footer}}
+    
+<script src='scripts/script.js'></script>
+</body>
+
+</html>
