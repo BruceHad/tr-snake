@@ -1,14 +1,25 @@
 To Do
 =====
 
-1. [ ] Make size variable.
-2. [ ] Improve tests.
-3. [x] Improve interface/game over screens (fix restart).
-4. [ ] Add in score/high score.
-5. [ ] Design container page.
-6. [x] Move event listeners outside objects.
-7. [x] Fix Pill generation so it doesn't sit on the tail.
-8. [ ] Improve Message display.
+v1.0.0:
+
+1. [x] Improve interface/game over screens (fix restart).
+1. [x] Move event listeners outside objects.
+1. [x] Fix Pill generation so it doesn't sit on the tail.
+...
+
+v1.0.1:
+
+1. [ ] Refactor...
+1. [ ] Improve test suite
+
+v1.0.2:
+
+
+v1.0.3:
+
+1. [ ] Improve Message display.
+1. [ ] Add in score/high score.
 
 Docs
 ====
@@ -16,11 +27,15 @@ Docs
 Square
 ------
 
-Square represents any discrete position on the grid. 
+(World.js)
 
-A square can be shifted in one of four directions, returning a new square.
+Square represents any discrete position on the grid as represented by variables x and y.
 
-A square can also be checked to see if its position matches another square.
+Public:
+
+* this.x, this.y - represents the x/y co-ords of the square.
+* this.shift direction - Return a new square, shifted on square in a given direction.
+* this.matches square - Checks if the co-ords of the square match.
 
 Grid
 ----
@@ -33,22 +48,39 @@ The grid can check if a square is outside of the grid (i.e. game over).
 
 The Grid also controls the regular update and drawing of the elements on the grid.
 
+Public:
+
+* this.width, this.height - width and height of the grid
+* this.isOutside(square) - returns true or false depending if the square is outside the boundaries of the grid.
+* this.getSnake - returns the snake.
+* this.update - updates the state of the grid and the snake. Return true or false depending on if the game is over.
+* this.draw - draws the grid and all elements to the canvas.
+
+
+Pill
+----
+
+A Pill represents the pill that the Snake eats to grow. It has a position on the grid and doesn't do much except for draw itself.
+
+Public:
+
+* this.square - current square on the grid.
+* this.draw (ctx, squareSize) - draws the pill on the grid.
+
 Segment
 -------
 
-Segment is a section of the snake. Each segment keeps track of its position (square) on the grid as well as the parent segment.
+Segment is a section of the snake. Each segment keeps track of its position (square) on the grid as well as that of its parent segment (so it can follow?).
 
 There are three types of segement: leader, tail and blank.
 
-The leader is the head of th snake. It doesn't have any parent. Instead, it has a direction, which can be changed via Snake.
+The leader is the head of the snake. It is the only segment not to have a parent. Instead, it has a direction, which can be changed (via Snake).
 
 The tail segments represent the rest of the snake, following the leader.
 
-Blanks are just placeholder segments that keep track of where the snake has been. 
+A blanks are just placeholder segments that keep track of where the snake has been. When the snake 'grows', blanks are converted to tails.
 
-Each turn, the leader shifts to a new square, based on the direction it is facing. All following segments (tail or blank) shift to the position their parent just vacated.
-
-Each seqment draws itself on the canvas (or doesn't in the case of the blanks.
+Each turn, the leader shifts to a new square based on the direction it is facing. All following segments (tail or blank) shift to the position their parent just vacated.
 
 Pill
 ----

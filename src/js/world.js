@@ -1,25 +1,30 @@
-// const blank = " ";
-
+/**
+ * Creates a square in the grid
+ */
 function Square(x, y) {
-  // Represents a square in the grid
-  this.x = x;
-  this.y = y;
-
   let directions = {
     'n': [0, -1],
     's': [0, 1],
     'e': [1, 0],
     'w': [-1, 0]
   };
-
+  this.x = x;
+  this.y = y;
+  
+  /**
+   * Returns a new square, shifted one square in the given
+   * direction.
+   */
   this.shift = (direction) => {
-    // return new square position, shifted n, s, e or w
     let vector = directions[direction];
     return new Square(
       this.x + vector[0],
       this.y + vector[1]);
   };
-
+  
+  /** 
+   * Checks is the square's location match another square.
+   */
   this.matches = (square) => {
     return square.x === this.x && square.y === this.y;
   };
